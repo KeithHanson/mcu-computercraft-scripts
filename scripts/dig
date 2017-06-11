@@ -1,0 +1,45 @@
+os.loadAPI("/scripts/apis/backtrack")
+
+function digAndMove(direction)
+  local actions = {
+    ["forward"] = function()
+      turtle.dig()
+      backtrack.forward()
+    end,
+    ["up"] = function()
+      turtle.digUp()
+      backtrack.up()
+    end,
+    ["down"] = function()
+      turtle.digDown()
+      backtrack.down()
+    end
+  }
+
+  local result = actions[direction]()
+
+  return result
+end
+
+local tArgs = {...}
+
+if #tArgs ~= 2 or tonumber(tArgs[2]) == nil or math.floor(tonumber(tArgs[2])) ~= tonumber(tArgs[2]) or tonumber(tArgs[2]) < 1 then
+  print("Usage: dig <dir> <steps>")
+  print("Digs a hole in the direction specified and returns.")
+  print("<dir> should be forward, up, down")
+  return
+end
+
+local direction = tArgs[1]
+local length = tonumber(tArgs[2])
+
+local blocksMovedForward = 0
+
+while blocksMovedForward < length do
+  print("Moving " .. tostring(blocksMovedForward) .. "/" .. length)
+  digAndMove(direction)
+  blocksMovedForward = blocksMovedForward + 1
+  sleep(1)
+end
+
+backtrack.home()
