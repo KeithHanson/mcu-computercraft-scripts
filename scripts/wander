@@ -1,0 +1,50 @@
+os.loadAPI("/scripts/apis/backtrack")
+
+function moveOrTurn()
+	local actions = {
+		[1] = function()
+			backtrack.forward()
+		end,
+		[2] = function()
+			backtrack.back()
+		end,
+		[3] = function()
+			backtrack.up()
+		end,
+		[4] = function()
+			backtrack.down()
+		end,
+		[5] = function()
+			backtrack.turnLeft()
+		end,
+		[6] = function()
+			backtrack.turnRight()
+		end
+	}
+
+	local randomChoice = math.random(6)
+
+	local result = actions[randomChoice]()
+
+	return result
+end
+
+local tArgs = {...}
+
+if #tArgs ~= 1 or tonumber(tArgs[1]) == nil or math.floor(tonumber(tArgs[1])) ~= tonumber(tArgs[1]) or tonumber(tArgs[1]) < 1 then
+	print("Usage: wander <steps>")
+	return
+end
+
+local length = tonumber(tArgs[1])
+
+local blocksMovedForward = 0
+
+while blocksMovedForward < length do
+ print("Moving " .. tostring(blocksMovedForward) .. "/" .. length)
+	moveOrTurn()
+	blocksMovedForward = blocksMovedForward + 1
+	sleep(1)
+end
+
+backtrack.home()
