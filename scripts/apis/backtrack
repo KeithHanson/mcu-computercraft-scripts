@@ -1,121 +1,121 @@
 function backtrackFile()
-	local file = fs.open("/backtrack_history.txt", fs.exists("/backtrack_history.txt") and "a" or "w")
+  local file = fs.open("/backtrack_history.txt", fs.exists("/backtrack_history.txt") and "a" or "w")
 
- return file
+  return file
 end
 
 function home()
- print("Going home.")
+  print("Going home.")
 
-	local file = fs.open("/backtrack_history.txt", "r")
+  local file = fs.open("/backtrack_history.txt", "r")
 
- local lines = {}
+  local lines = {}
 
- local currentLine = file.readLine()
+  local currentLine = file.readLine()
 
-	while currentLine do
-		table.insert(lines, currentLine)
-  currentLine = file.readLine()
-	end
+  while currentLine do
+    table.insert(lines, currentLine)
+    currentLine = file.readLine()
+  end
 
- print(tostring(table.getn(lines)) .. " steps loaded.")
+  print(tostring(table.getn(lines)) .. " steps loaded.")
 
-	local reversedDirections = {}
+  local reversedDirections = {}
 
-	while table.getn(lines) > 0 do
-  local line = table.remove(lines)
-  
-		local oppositeDirection = opposite(line)
+  while table.getn(lines) > 0 do
+    local line = table.remove(lines)
 
-		table.insert(reversedDirections, 1, oppositeDirection)
+    local oppositeDirection = opposite(line)
 
-		print("Moving opposite from: " .. line .. " | " .. oppositeDirection)
-    
-  moveOrTurn(oppositeDirection)
-  
-  sleep(1)
-	end
+    table.insert(reversedDirections, 1, oppositeDirection)
 
- fs.delete("/backtrack_history.txt")
+    print("Moving opposite from: " .. line .. " | " .. oppositeDirection)
+
+    moveOrTurn(oppositeDirection)
+
+    sleep(1)
+  end
+
+  fs.delete("/backtrack_history.txt")
 end
 
 function deleteBacktrackFile()
-	return fs.delete("/backtrack_history.txt")
+  return fs.delete("/backtrack_history.txt")
 end
 
 function btLogDirection(direction)
-	local btFile = backtrackFile()
+  local btFile = backtrackFile()
 
-	btFile.writeLine(direction)
- 	btFile.flush()
- btFile.close()
+  btFile.writeLine(direction)
+  btFile.flush()
+  btFile.close()
 end
 
 function opposite(direction)
-	local directionsWithOpposites = {
-		["forward"] = "back",
-		["back"] = "forward",
-		["up"] = "down",
-		["down"] = "up",
-		["turnLeft"] = "turnRight",
-		["turnRight"] = "turnLeft"
-	}
+  local directionsWithOpposites = {
+    ["forward"] = "back",
+    ["back"] = "forward",
+    ["up"] = "down",
+    ["down"] = "up",
+    ["turnLeft"] = "turnRight",
+    ["turnRight"] = "turnLeft"
+  }
 
-	return directionsWithOpposites[direction]
+  return directionsWithOpposites[direction]
 end
 
 function moveOrTurn(action)
-	local actions = {
-		["forward"] = function() 
-			return turtle.forward() 
-		end,
-		["back"] = function() 
-			return turtle.back() 
-		end,
-		["up"] = function() 
-			return turtle.up() 
-		end,
-		["down"] = function() 
-			return turtle.down() 
-		end,
-		["turnLeft"] = function() 
-			return turtle.turnLeft() 
-		end,
-		["turnRight"] = function() 
-			return turtle.turnRight() 
-		end
-	}
+  local actions = {
+    ["forward"] = function() 
+      return turtle.forward() 
+    end,
+    ["back"] = function() 
+      return turtle.back() 
+    end,
+    ["up"] = function() 
+      return turtle.up() 
+    end,
+    ["down"] = function() 
+      return turtle.down() 
+    end,
+    ["turnLeft"] = function() 
+      return turtle.turnLeft() 
+    end,
+    ["turnRight"] = function() 
+      return turtle.turnRight() 
+    end
+  }
 
-	local result = actions[action]()
- 	print("Action: " .. action .. " | Result: " .. tostring(result))
+  local result = actions[action]()
+  print("Action: " .. action .. " | Result: " .. tostring(result))
 
-	if result then
-		btLogDirection(action)
-	end
+  if result then
+    btLogDirection(action)
+  end
 
-	return result
+  return result
 end
 
 function forward() 
-	return moveOrTurn("forward")
+  return moveOrTurn("forward")
 end
 
 function back()
-	return moveOrTurn("back")
+  return moveOrTurn("back")
 end
 
 function up()
-	return moveOrTurn("up")
+  return moveOrTurn("up")
 end
 
 function down()
-	return moveOrTurn("down")
+  return moveOrTurn("down")
 end
 
 function turnLeft()
-	return moveOrTurn("turnLeft")
+  return moveOrTurn("turnLeft")
 end
 
 function turnRight()
-	return moveOrTurn("turnRight")
+  return moveOrTurn("turnRight")
 end
