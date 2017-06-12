@@ -4,6 +4,7 @@ function digAndMove(direction)
   local actions = {
     ["forward"] = function()
       turtle.dig()
+      turtle.digUp()
       backtrack.forward()
     end,
     ["up"] = function()
@@ -27,6 +28,7 @@ if #tArgs ~= 2 or tonumber(tArgs[2]) == nil or math.floor(tonumber(tArgs[2])) ~=
   print("Usage: dig <dir> <steps>")
   print("Digs a hole in the direction specified and returns.")
   print("<dir> should be forward, up, down")
+  print("Place a torch from slot 1 every 5 blocks")
   return
 end
 
@@ -36,6 +38,11 @@ local length = tonumber(tArgs[2])
 local blocksMovedForward = 0
 
 while blocksMovedForward < length do
+  if blocksMovedForward % 5 == 0 then
+    print("Laying torch from slot 1")
+    turtle.select(1)
+    turtle.place()
+  end
   print("Moving " .. tostring(blocksMovedForward) .. "/" .. length)
   digAndMove(direction)
   blocksMovedForward = blocksMovedForward + 1
